@@ -38,6 +38,11 @@ for repo in $repos; do
     # Get the list of users
     users=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$API_URL/repos/$ORG_NAME/$repo/collaborators?per_page=100" | jq -r '.[].login' | paste -sd "," -)
 
+    # Ensure users are not null
+    if [[ -z "$users" ]]; then
+        users="No users"
+    fi
+
     # Append to CSV file
     echo "$repo,\"$users\",\"$last_updated\"" >> $OUTPUT_FILE
 done
